@@ -22,6 +22,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
 
   final ScrollController controller = ScrollController();
+  late Size _size;
   bool isScrolling = false;
   int sortIndex = -1;
   Map<String, dynamic> filters = {};
@@ -52,6 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _size = MediaQuery.of(context).size;
 
     return AnnotatedRegion(
       value: const SystemUiOverlayStyle(
@@ -140,6 +142,10 @@ class _HomeScreenState extends State<HomeScreen> {
           HotelListItemLoading(),
         ],
       );
+    }
+
+    if(results is ErrorState){
+      return _error();
     }
 
     List<Hotel> hotels = (results as SuccessState).value;
@@ -252,6 +258,53 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 
   }
+
+  Widget _error(){
+
+    return Center(
+      child: SizedBox(
+        width: _size.width*.8,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.warning_rounded,
+              color: Colors.red.shade700,
+              size: 100.r,
+            ),
+            Gap(20.h),
+            Container(
+              decoration: BoxDecoration(
+                  color: Colors.grey.shade400,
+                  borderRadius: BorderRadius.circular(16.r)
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 8.h),
+              child: Text(
+                (results as ErrorState).msg,
+                style: theme.mediumTxt,
+              ),
+            ),
+            Gap(20.h),
+            TextButton(
+              onPressed: (){
+                _getData();
+              },
+              style: theme.priBtnStyle,
+              child: Text(
+                'Try Again',
+                style: theme.semiBoldTxt.copyWith(
+                  color: Colors.white,
+                  fontSize: 14.sp
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+
+  }
+
 
   @override
   void dispose() {

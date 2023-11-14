@@ -49,6 +49,7 @@ dependencies:
   animated_custom_dropdown: ^2.0.0
   flutter_native_splash: ^2.3.5
   intl: ^0.18.1
+  http: ^1.1.0
 
 dev_dependencies:
   flutter_test:
